@@ -27,6 +27,11 @@ struct_info('columnUpdate') ->
           {6, bool}]}
 ;
 
+struct_info('diskUsage') ->
+  {struct, [{1, {list, string}},
+          {2, i64}]}
+;
+
 struct_info('keyValue') ->
   {struct, [{1, {struct, {'proxy_types', 'key'}}},
           {2, string}]}
@@ -87,6 +92,25 @@ struct_info('column') ->
   {struct, [{1, string},
           {2, string},
           {3, string}]}
+;
+
+struct_info('condition') ->
+  {struct, [{1, {struct, {'proxy_types', 'column'}}},
+          {2, i64},
+          {3, string},
+          {4, {list, {struct, {'proxy_types', 'iteratorSetting'}}}}]}
+;
+
+struct_info('conditionalUpdates') ->
+  {struct, [{2, {list, {struct, {'proxy_types', 'condition'}}}},
+          {3, {list, {struct, {'proxy_types', 'columnUpdate'}}}}]}
+;
+
+struct_info('conditionalWriterOptions') ->
+  {struct, [{1, i64},
+          {2, i64},
+          {3, i32},
+          {4, {set, string}}]}
 ;
 
 struct_info('activeScan') ->
@@ -162,7 +186,7 @@ struct_info_ext('key') ->
           {2, undefined, string, 'colFamily', undefined},
           {3, undefined, string, 'colQualifier', undefined},
           {4, undefined, string, 'colVisibility', undefined},
-          {5, optional, i64, 'timestamp', undefined}]}
+          {5, optional, i64, 'timestamp', 9223372036854775807}]}
 ;
 
 struct_info_ext('columnUpdate') ->
@@ -172,6 +196,11 @@ struct_info_ext('columnUpdate') ->
           {4, optional, i64, 'timestamp', undefined},
           {5, optional, string, 'value', undefined},
           {6, optional, bool, 'deleteCell', undefined}]}
+;
+
+struct_info_ext('diskUsage') ->
+  {struct, [{1, undefined, {list, string}, 'tables', []},
+          {2, undefined, i64, 'usage', undefined}]}
 ;
 
 struct_info_ext('keyValue') ->
@@ -234,6 +263,25 @@ struct_info_ext('column') ->
   {struct, [{1, undefined, string, 'colFamily', undefined},
           {2, undefined, string, 'colQualifier', undefined},
           {3, undefined, string, 'colVisibility', undefined}]}
+;
+
+struct_info_ext('condition') ->
+  {struct, [{1, undefined, {struct, {'proxy_types', 'column'}}, 'column', #column{}},
+          {2, optional, i64, 'timestamp', undefined},
+          {3, optional, string, 'value', undefined},
+          {4, optional, {list, {struct, {'proxy_types', 'iteratorSetting'}}}, 'iterators', []}]}
+;
+
+struct_info_ext('conditionalUpdates') ->
+  {struct, [{2, undefined, {list, {struct, {'proxy_types', 'condition'}}}, 'conditions', []},
+          {3, undefined, {list, {struct, {'proxy_types', 'columnUpdate'}}}, 'updates', []}]}
+;
+
+struct_info_ext('conditionalWriterOptions') ->
+  {struct, [{1, optional, i64, 'maxMemory', undefined},
+          {2, optional, i64, 'timeoutMs', undefined},
+          {3, optional, i32, 'threads', undefined},
+          {4, optional, {set, string}, 'authorizations', sets:new()}]}
 ;
 
 struct_info_ext('activeScan') ->

@@ -131,3 +131,12 @@
 -define(ACCUMULO_TEST_TABLE_CLASS_LOAD,'testTableClassLoad').
 -define(ACCUMULO_PING_TABLET_SERVER,'pingTabletServer').
 -define(ACCUMULO_TEST_CLASS_LOAD,'testClassLoad').
+
+%% --- 1.6.0 ---
+-define(ACCUMULO_GET_DISK_USAGE, 'getDiskUsage').
+
+-define(ACCUMULO_UPDATE_ROW_CONDITIONALLY,'updateRowConditionally').
+
+-define(ACCUMULO_CREATE_CONDITIONAL_WRITER,'createConditionalWriter').
+-define(ACCUMULO_UPDATE_ROWS_CONDITIONALLY,'updateRowsConditionally').
+-define(ACCUMULO_CLOSE_CONDITIONAL_WRITER,'closeConditionalWriter').

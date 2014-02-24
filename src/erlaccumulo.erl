@@ -58,6 +58,14 @@
 		test_table_class_load/2
 ]).
 
+-export([
+	get_disk_usage/2,
+	update_row_conditionally/2,
+	create_conditional_writer/2,
+	update_rows_conditionally/2,
+	close_conditional_writer/2
+]).
+
 %start()-> ok.
 	%application:start(thrift),
 	%application:start(erlaccumulo).
@@ -202,12 +210,14 @@ revoke_table_permission(PoolName,Params) ->
 merge_tablets(PoolName,Params) ->
 	do_request(PoolName,?ACCUMULO_MERGE_TABLETS,Params,true).
 
-%% Params : [TableName::string()]
+%% add wait parameter since 1.6
+%% Params : [TableName::string(),Wait::boolean()]
 %% return : {ok,ok}
 offline_table(PoolName,Params) ->
 	do_request(PoolName,?ACCUMULO_OFFLINE_TABLE,Params,true).
 
-%% Params : [TableName::string()]
+%% add wait parameter since 1.6
+%% Params : [TableName::string(),Wait::booean()]
 %% return : {ok,ok}
 online_table(PoolName,Params) ->
 	do_request(PoolName,?ACCUMULO_ONLINE_TABLE,Params,true).
@@ -462,6 +472,35 @@ test_class_load(PoolName,Params) ->
 %% return : {ok, Result::boolean()}
 test_table_class_load(PoolName,Params) ->
 	do_request(PoolName,?ACCUMULO_TEST_TABLE_CLASS_LOAD,Params,true).
+
+%%================================================
+%% new service since 1.6.0
+%%================================================
+
+%% Param : [ TableNames::set(TableName::string()) ]
+%% return : {ok,Result::#diskUsage{}}
+get_disk_usage(PoolName, Params) ->
+	do_request(PoolName, ?ACCUMULO_GET_DISK_USAGE, Params, true).
+
+%% Param : [ TableName::string(), Row::string(), Update::#conditionalUpdates]
+%% return : {ok, Result::int32()}
+update_row_conditionally(PoolName, Params) ->
+	do_request(PoolName, ?ACCUMULO_UPDATE_ROW_CONDITIONALLY, Params, true).
+
+%% Param : [TableName::string(), Options::#conditionalWriterOptions{}]
+%% return : {ok, ConditionalWriter::string()}
+create_conditional_writer(PoolName, Params) ->
+	do_request(PoolName, ?ACCUMULO_CREATE_CONDITIONAL_WRITER, Params, true).
+
+%% Param : [ ConditionalWriter::string(), Update::#conditionalUpdates]
+%% return : {ok, Result::dict(Row::string, Update::int32())}
+update_rows_conditionally(PoolName, Params) ->
+	do_request(PoolName, ?ACCUMULO_UPDATE_ROWS_CONDITIONALLY, Params, false).
+
+%% Param : [ConditionalWriter::string()]
+%% return : {ok,ok}
+close_conditional_writer(PoolName, Params) ->
+	do_request(PoolName, ?ACCUMULO_CLOSE_CONDITIONAL_WRITER, Params, false).
 
 %%================================================
 %% utility methods

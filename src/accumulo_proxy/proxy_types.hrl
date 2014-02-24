@@ -31,6 +31,12 @@
 -define(proxy_ScanState_RUNNING, 1).
 -define(proxy_ScanState_QUEUED, 2).
 
+-define(proxy_ConditionalStatus_ACCEPTED, 0).
+-define(proxy_ConditionalStatus_REJECTED, 1).
+-define(proxy_ConditionalStatus_VIOLATED, 2).
+-define(proxy_ConditionalStatus_UNKNOWN, 3).
+-define(proxy_ConditionalStatus_INVISIBLE_VISIBILITY, 4).
+
 -define(proxy_CompactionType_MINOR, 0).
 -define(proxy_CompactionType_MERGE, 1).
 -define(proxy_CompactionType_MAJOR, 2).
@@ -55,7 +61,7 @@
               colFamily :: string() | binary(),
               colQualifier :: string() | binary(),
               colVisibility :: string() | binary(),
-              timestamp :: integer()}).
+              timestamp = 9223372036854775807 :: integer()}).
 
 %% struct columnUpdate
 
@@ -65,6 +71,11 @@
                        timestamp :: integer(),
                        value :: string() | binary(),
                        deleteCell :: boolean()}).
+
+%% struct diskUsage
+
+-record(diskUsage, {tables :: list(),
+                    usage :: integer()}).
 
 %% struct keyValue
 
@@ -127,6 +138,25 @@
 -record(column, {colFamily :: string() | binary(),
                  colQualifier :: string() | binary(),
                  colVisibility :: string() | binary()}).
+
+%% struct condition
+
+-record(condition, {column :: #column{},
+                    timestamp :: integer(),
+                    value :: string() | binary(),
+                    iterators :: list()}).
+
+%% struct conditionalUpdates
+
+-record(conditionalUpdates, {conditions :: list(),
+                             updates :: list()}).
+
+%% struct conditionalWriterOptions
+
+-record(conditionalWriterOptions, {maxMemory :: integer(),
+                                   timeoutMs :: integer(),
+                                   threads :: integer(),
+                                   authorizations :: set()}).
 
 %% struct activeScan
 

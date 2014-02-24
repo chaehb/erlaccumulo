@@ -202,6 +202,18 @@ function_info('flushTable', exceptions) ->
           {2, {struct, {'proxy_types', 'accumuloSecurityException'}}},
           {3, {struct, {'proxy_types', 'tableNotFoundException'}}}]}
 ;
+% getDiskUsage(This, Login, Tables)
+function_info('getDiskUsage', params_type) ->
+  {struct, [{1, string},
+          {2, {set, string}}]}
+;
+function_info('getDiskUsage', reply_type) ->
+  {list, {struct, {'proxy_types', 'diskUsage'}}};
+function_info('getDiskUsage', exceptions) ->
+  {struct, [{1, {struct, {'proxy_types', 'accumuloException'}}},
+          {2, {struct, {'proxy_types', 'accumuloSecurityException'}}},
+          {3, {struct, {'proxy_types', 'tableNotFoundException'}}}]}
+;
 % getLocalityGroups(This, Login, TableName)
 function_info('getLocalityGroups', params_type) ->
   {struct, [{1, string},
@@ -345,10 +357,11 @@ function_info('mergeTablets', exceptions) ->
           {2, {struct, {'proxy_types', 'accumuloSecurityException'}}},
           {3, {struct, {'proxy_types', 'tableNotFoundException'}}}]}
 ;
-% offlineTable(This, Login, TableName)
+% offlineTable(This, Login, TableName, Wait)
 function_info('offlineTable', params_type) ->
   {struct, [{1, string},
-          {2, string}]}
+          {2, string},
+          {3, bool}]}
 ;
 function_info('offlineTable', reply_type) ->
   {struct, []};
@@ -357,10 +370,11 @@ function_info('offlineTable', exceptions) ->
           {2, {struct, {'proxy_types', 'accumuloSecurityException'}}},
           {3, {struct, {'proxy_types', 'tableNotFoundException'}}}]}
 ;
-% onlineTable(This, Login, TableName)
+% onlineTable(This, Login, TableName, Wait)
 function_info('onlineTable', params_type) ->
   {struct, [{1, string},
-          {2, string}]}
+          {2, string},
+          {3, bool}]}
 ;
 function_info('onlineTable', reply_type) ->
   {struct, []};
@@ -876,6 +890,54 @@ function_info('closeWriter', reply_type) ->
 function_info('closeWriter', exceptions) ->
   {struct, [{1, {struct, {'proxy_types', 'unknownWriter'}}},
           {2, {struct, {'proxy_types', 'mutationsRejectedException'}}}]}
+;
+% updateRowConditionally(This, Login, TableName, Row, Updates)
+function_info('updateRowConditionally', params_type) ->
+  {struct, [{1, string},
+          {2, string},
+          {3, string},
+          {4, {struct, {'proxy_types', 'conditionalUpdates'}}}]}
+;
+function_info('updateRowConditionally', reply_type) ->
+  i32;
+function_info('updateRowConditionally', exceptions) ->
+  {struct, [{1, {struct, {'proxy_types', 'accumuloException'}}},
+          {2, {struct, {'proxy_types', 'accumuloSecurityException'}}},
+          {3, {struct, {'proxy_types', 'tableNotFoundException'}}}]}
+;
+% createConditionalWriter(This, Login, TableName, Options)
+function_info('createConditionalWriter', params_type) ->
+  {struct, [{1, string},
+          {2, string},
+          {3, {struct, {'proxy_types', 'conditionalWriterOptions'}}}]}
+;
+function_info('createConditionalWriter', reply_type) ->
+  string;
+function_info('createConditionalWriter', exceptions) ->
+  {struct, [{1, {struct, {'proxy_types', 'accumuloException'}}},
+          {2, {struct, {'proxy_types', 'accumuloSecurityException'}}},
+          {3, {struct, {'proxy_types', 'tableNotFoundException'}}}]}
+;
+% updateRowsConditionally(This, ConditionalWriter, Updates)
+function_info('updateRowsConditionally', params_type) ->
+  {struct, [{1, string},
+          {2, {map, string, {struct, {'proxy_types', 'conditionalUpdates'}}}}]}
+;
+function_info('updateRowsConditionally', reply_type) ->
+  {map, string, i32};
+function_info('updateRowsConditionally', exceptions) ->
+  {struct, [{1, {struct, {'proxy_types', 'unknownWriter'}}},
+          {2, {struct, {'proxy_types', 'accumuloException'}}},
+          {3, {struct, {'proxy_types', 'accumuloSecurityException'}}}]}
+;
+% closeConditionalWriter(This, ConditionalWriter)
+function_info('closeConditionalWriter', params_type) ->
+  {struct, [{1, string}]}
+;
+function_info('closeConditionalWriter', reply_type) ->
+  {struct, []};
+function_info('closeConditionalWriter', exceptions) ->
+  {struct, []}
 ;
 % getRowRange(This, Row)
 function_info('getRowRange', params_type) ->
