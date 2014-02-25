@@ -1,4 +1,4 @@
--include("src/accumulo_proxy/proxy_types.hrl").
+-include("accumulo_proxy/proxy_types.hrl").
 
 -define(THRIFT_MODULE,accumuloProxy_thrift).
 

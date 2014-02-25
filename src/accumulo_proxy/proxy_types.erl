@@ -6,7 +6,7 @@
 
 -module(proxy_types).
 
--include("proxy_types.hrl").
+-include("accumulo_proxy/proxy_types.hrl").
 
 -export([struct_info/1, struct_info_ext/1]).
 

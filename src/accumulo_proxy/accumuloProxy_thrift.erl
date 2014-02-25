@@ -8,7 +8,7 @@
 -behaviour(thrift_service).
 
 
--include("accumuloProxy_thrift.hrl").
+-include("accumulo_proxy/accumuloProxy_thrift.hrl").
 
 -export([struct_info/1, function_info/2]).
 
