@@ -2,7 +2,8 @@
 
 -define(THRIFT_MODULE,accumuloProxy_thrift).
 
--define(SYSTEM_TABLES,[<<"!METADATA">>,<<"trace">>]).
+%-define(SYSTEM_TABLES,[ <<"!METADATA">>, <<"trace">>]).
+-define(SYSTEM_TABLES,[ <<"accumulo.metadata">>, <<"accumulo.root">>, <<"trace">>]).
 -define(SYSTEM_ACCOUNTS,[<<"root">>]).
 
 %% errors
