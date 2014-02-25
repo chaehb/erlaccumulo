@@ -75,7 +75,7 @@
 %%================================================
 
 %% Params : []
-%% return : {ok,Tables::list(Table::string{})}	
+%% return : {ok,Tables::set(Table::string{})}	
 list_tables(PoolName) ->
 	% case do_request(PoolName,?ACCUMULO_LIST_TABLES,[],true) of
 	% 	{ok,Response} ->
@@ -86,7 +86,8 @@ list_tables(PoolName) ->
 	% end.
 	case do_request(PoolName,?ACCUMULO_LIST_TABLES,[],true) of
 		{ok, Response} ->
-			{ok,sets:subtract(Response,sets:from_list(?SYSTEM_TABLES))};
+			%{ok,sets:subtract(Response,sets:from_list(?SYSTEM_TABLES))};
+			{ok,Response};
 		{_, Reply} ->
 			{error, Reply}
 	end.
