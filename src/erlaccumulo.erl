@@ -321,8 +321,9 @@ close_scanner(PoolName,Params)->
 %%================================================
 %% Writer
 %%================================================
-%% Params=[TableName::string(), 
-%%			Options::list(Option#writerOptions{})
+%% Params=[
+%% 	  TableName::string(), 
+%%	  Options::#writerOptions{}
 %%	]
 %% return : {ok,Writer::string()}
 create_writer(PoolName,Params) ->
