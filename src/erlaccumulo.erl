@@ -3,7 +3,7 @@
 -include("erlaccumulo.hrl").
 
 %-export([start/0]).
--export([default_pool/0, pools/0]).
+-export([default_pool/0]).
 
 -export([
 	list_tables/1,
@@ -510,17 +510,9 @@ close_conditional_writer(PoolName, Params) ->
 
 %% DefaultPool::atom()
 default_pool() ->
-	ets:first(?ACCUMULO_CLIENT_POOLS_ETS).
-	
-%% Pools::list(Pool::string())
-pools()->
-	ets:foldr(
-		fun({Key,_Value},List) -> 
-			List++[Key] 
-		end,
-		[],?ACCUMULO_CLIENT_POOLS_ETS
-	).
-	
+	Pool=ets:first(?ACCUMULO_CLIENT_POOLS_ETS),
+	Pool#accumulo_pool.pool.
+		
 %%================================================
 %% Internal methods
 %%================================================
@@ -540,4 +532,5 @@ do_request(PoolName,Function,Params,NeedLogin)->
 		_:Reason ->
 			{error,Reason}
 	end.
+
 	

@@ -17,6 +17,8 @@
 
 -define(ACCUMULO_CLIENT_POOLS_ETS,accumulo_client_pools).
 
+-record(accumulo_pool,{idx , pool}).
+
 %% AccumuloProxy services
 
 %%--------- Table  ------------
