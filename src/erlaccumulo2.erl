@@ -139,7 +139,7 @@ import_directory(TableName,ImportDirectory,FailureDirectory,SetTime) ->
 %% Params = [TableName::string(), StartRow::string()|undefined, EndRow::string()|undefined, Wait::boolean()]
 %% return {ok,ok}
 flush_table(TableName, StartRow, EndRow, Wait) ->
-	do_request(?ACCUMULO_FLUSH_TABLE, [TableName, StartRow, EndRow], Wait, true).
+	do_request(?ACCUMULO_FLUSH_TABLE, [TableName, StartRow, EndRow, Wait], true).
 
 %% Params=[TabletServerAddress::string()]
 %% return {ok,ActiveCompactions::list(ActiveCompaction::#activeCompaction{})}
