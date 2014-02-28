@@ -371,7 +371,7 @@ get_following(PoolName,Params)->
 %%================================================
 
 %% Params :
-%% return : {ok, Users::list(User::string())}
+%% return : {ok, Users::set(User::string())}
 list_local_users(PoolName) ->
 	% case do_request(PoolName,?ACCUMULO_LIST_LOCAL_USERS,[],true) of
 	% 	{ok,Response} ->

@@ -370,7 +370,7 @@ get_following(Key, Part)->
 %%================================================
 
 %% Params :
-%% return : {ok, Users::list(User::string())}
+%% return : {ok, Users::set(User::string())}
 list_local_users() ->
 	% case do_request(?ACCUMULO_LIST_LOCAL_USERS,[],true) of
 	% 	{ok,Response} ->
