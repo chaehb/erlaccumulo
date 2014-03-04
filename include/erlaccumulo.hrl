@@ -2,8 +2,7 @@
 
 -define(THRIFT_MODULE,accumuloProxy_thrift).
 
-%-define(SYSTEM_TABLES,[ <<"!METADATA">>, <<"trace">>]).
--define(SYSTEM_TABLES,[ <<"accumulo.metadata">>, <<"accumulo.root">>, <<"trace">>]).
+-define(SYSTEM_TABLES,[ <<"!METADATA">>, <<"accumulo.metadata">>, <<"accumulo.root">>, <<"trace">>]).
 -define(SYSTEM_ACCOUNTS,[<<"root">>]).
 
 %% errors
@@ -12,8 +11,6 @@
 
 -define(ACCUMULO_TIME_TYPE_LOGICAL,0).
 -define(ACCUMULO_TIME_TYPE_MILLIS,1).
-
-%-define(UNICODE_LAST, <<"\357\277\277">>).
 
 -define(ACCUMULO_CLIENT_POOLS_ETS,accumulo_client_pools).
 
