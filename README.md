@@ -14,6 +14,9 @@ to
 
 and restart proxy server !
 
+Compatibility :
+	accumulo 1.6.0 or later
+	
 dependencies :
 
 	thrift : thrift erlang binding from thrift original source
