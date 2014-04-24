@@ -25,8 +25,15 @@ start_link(Pools) ->
 %% ===================================================================
 
 init([]) ->
-	{ok,Pools} = application:get_env(erlaccumulo,pools),
-	
+	%{ok,Pools} = application:get_env(erlaccumulo,pools),
+	Pools=case application:get_env(erlaccumulo,pools) of
+		undefined ->
+			{ok,[Props]}=file:consult("conf/erlaccumulo.config"),
+			AccumuloConfigs=proplists:get_value(erlaccumulo,Props),
+			proplists:get_value(pools,AccumuloConfigs);
+		{ok,PoolConfig} ->
+			PoolConfig
+	end,
 	% io:format("~p~n",[Pools]),
 	% {ok,[Props]}=file:consult("conf/erlaccumulo.config"),
 	% AccumuloConfigs=proplists:get_value(erlaccumulo,Props),
