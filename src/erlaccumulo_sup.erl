@@ -42,12 +42,16 @@ init([]) ->
 	init(Pools);
 
 init(Pools) ->
-	ets:new(?ACCUMULO_CLIENT_POOLS_ETS,[set,named_table,{keypos,#accumulo_pool.idx},public]),
-	
-    {PoolSpecs,_} = lists:mapfoldl(fun({Name, SizeArgs, WorkerArgs},Idx) ->
-				  ets:insert(?ACCUMULO_CLIENT_POOLS_ETS,#accumulo_pool{idx=Idx,pool=Name}),
+	case ets:info(?ACCUMULO_CLIENT_POOLS_ETS) of
+		undefined ->
+			ets:new(?ACCUMULO_CLIENT_POOLS_ETS,[set,named_table,public]);
+		_Info ->
+			ets:delete_all_objects(?ACCUMULO_CLIENT_POOLS_ETS)
+	end,
+    PoolSpecs = lists:map(fun({Name, SizeArgs, WorkerArgs}) ->
+				  ets:insert(?ACCUMULO_CLIENT_POOLS_ETS,{Name,Name}),
 				  PoolArgs = [{name, {local, Name}},
-				  {worker_module, erlaccumulo_pool_worker}] ++ SizeArgs,
-				  {poolboy:child_spec(Name, PoolArgs, WorkerArgs), Idx+1}
-			  end, 1, Pools),
+					      {worker_module, erlaccumulo_pool_worker}] ++ SizeArgs,
+				  poolboy:child_spec(Name, PoolArgs, WorkerArgs)
+			  end, Pools),
     {ok, {{one_for_one, 10, 10}, PoolSpecs}}.
