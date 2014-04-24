@@ -104,11 +104,11 @@
 -record(iteratorSetting, {priority :: integer(),
                           name :: string() | binary(),
                           iteratorClass :: string() | binary(),
-                          properties :: dict()}).
+                          properties :: dict:dict()}).
 
 %% struct scanOptions
 
--record(scanOptions, {authorizations :: set(),
+-record(scanOptions, {authorizations :: sets:set(),
                       range :: #range{},
                       columns :: list(),
                       iterators :: list(),
@@ -116,7 +116,7 @@
 
 %% struct batchScanOptions
 
--record(batchScanOptions, {authorizations :: set(),
+-record(batchScanOptions, {authorizations :: sets:set(),
                            ranges :: list(),
                            columns :: list(),
                            iterators :: list(),
@@ -156,7 +156,7 @@
 -record(conditionalWriterOptions, {maxMemory :: integer(),
                                    timeoutMs :: integer(),
                                    threads :: integer(),
-                                   authorizations :: set()}).
+                                   authorizations :: sets:set()}).
 
 %% struct activeScan
 
