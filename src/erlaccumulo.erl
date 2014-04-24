@@ -308,7 +308,7 @@ next_entry(Scanner)->
 	do_request(?ACCUMULO_NEXT_ENTRY,[Scanner],false).
 	
 %% Params = [ Scanner::string(),K::int32()]
-%% {ok,NextK::#scanREsult{}}
+%% {ok,NextK::#scanResult{}}
 next_k(Scanner,K)->
 	do_request(?ACCUMULO_NEXT_K,[Scanner,K],false).
 
