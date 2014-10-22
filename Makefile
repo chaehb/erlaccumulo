@@ -1,4 +1,4 @@
-REBAR = /usr/local/bin/rebar
+REBAR = ./rebar
 
 all: deps
 	@$(REBAR) compile

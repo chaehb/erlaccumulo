@@ -1,5 +1,3 @@
--include("accumulo_proxy/proxy_types.hrl").
-
 -define(THRIFT_MODULE,accumuloProxy_thrift).
 
 -define(SYSTEM_TABLES,[ <<"!METADATA">>, <<"accumulo.metadata">>, <<"accumulo.root">>, <<"trace">>]).
@@ -12,10 +10,12 @@
 -define(ACCUMULO_TIME_TYPE_LOGICAL,0).
 -define(ACCUMULO_TIME_TYPE_MILLIS,1).
 
--define(ACCUMULO_CLIENT_POOLS_ETS,accumulo_client_pools).
+-record(proxy_conn, {
+	connection,
+	login
+}).
 
--record(accumulo_pool,{idx , pool}).
-
+-define(NEXT_CONN(Idx,Mod), (Idx+1) mod Mod).
 %% AccumuloProxy services
 
 %%--------- Table  ------------

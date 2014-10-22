@@ -1,8 +1,14 @@
+%%%-------------------------------------------------------------------
+%%% @author chaehb <chaehb@gmail.com>
+%%% @copyright (C) 2014, <Data Science Factory Ltd>
+%%% @doc
+%%%
+%%% @end
+%%% Created : 14. Sep 2014 00:41
+%%%-------------------------------------------------------------------
 -module(erlaccumulo_sup).
 
 -behaviour(supervisor).
-
--include("erlaccumulo.hrl").
 
 %% API
 -export([start_link/0, start_link/1]).
@@ -17,36 +23,67 @@
 start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
-start_link(Pools) ->
-    supervisor:start_link({local, ?MODULE}, ?MODULE, Pools).
-
+start_link(Args) ->
+    supervisor:start_link({local, ?MODULE}, ?MODULE, Args).
 %% ===================================================================
 %% Supervisor callbacks
 %% ===================================================================
-
-init([]) ->
-	Pools=case application:get_env(erlaccumulo,pools) of
-		undefined ->
-			{ok,[Props]}=file:consult("conf/erlaccumulo.config"),
-			AccumuloConfigs=proplists:get_value(erlaccumulo,Props),
-			proplists:get_value(pools,AccumuloConfigs);
-		{ok,PoolConfig} ->
-			PoolConfig
-	end,
 	
-	init(Pools);
+init(Args) ->
+	try
+		case Args of
+			[] -> % use file in default path
+				% {ok,App} = application:get_application(?MODULE),
+				% Priv = code:priv_dir(App),
+				% {ok, [DefaultConfig]} = file:consult(Priv++"/erlaccumulo.config"),
+				{ok, [DefaultConfig]} = file:consult("priv/erlaccumulo.config"),
+				setup(DefaultConfig);
+			[ConfPath] ->
+				{ok, [CustomConfig]} = file:consult(ConfPath),
+				setup(CustomConfig);
+			_ -> 
+				throw(bad_args)
+		end
+	catch
+		_:Reason ->
+			exit(Reason,kill)
+	end.
 
-init(Pools) ->
-	case ets:info(?ACCUMULO_CLIENT_POOLS_ETS) of
-		undefined ->
-			ets:new(?ACCUMULO_CLIENT_POOLS_ETS,[set,named_table,{keypos,#accumulo_pool.idx},public]);
-		_Info ->
-			ets:delete_all_objects(?ACCUMULO_CLIENT_POOLS_ETS)
-	end,
-	{PoolSpecs,_} = 
-		lists:mapfoldl(fun({Name, SizeArgs, WorkerArgs},Idx) ->
-			ets:insert(?ACCUMULO_CLIENT_POOLS_ETS,#accumulo_pool{idx=Idx,pool=Name}),
-			PoolArgs = [{name, {local, Name}},{worker_module, erlaccumulo_pool_worker}] ++ SizeArgs,
-			{poolboy:child_spec(Name, PoolArgs, WorkerArgs), Idx+1}
-		end, 1, Pools),
-    {ok, {{one_for_one, 10, 10}, PoolSpecs}}.
+setup(Configs) ->
+	Config = proplists:get_value(erlaccumulo,Configs),
+	SupervisorConfig = proplists:get_value(supervisor,Config),
+	MaxRestart = proplists:get_value(max_restart,SupervisorConfig),
+	MaxTime = proplists:get_value(max_time,SupervisorConfig),
+	
+	ProxyServers = proplists:get_value(proxy_servers, Config),
+	%% workers
+	ChildWorkerSpecs = [
+		%% data manipulation
+		% {data_worker,
+		% 	{data_worker,start_link,ProxyServers},
+		% 	permanent, 5000,worker,
+		% 	[data_worker]},
+		%% controls for accumulo
+		{accumulo_table_worker,
+			{accumulo_table_worker,start_link,[ProxyServers]},
+			permanent, 5000,worker,
+			[accumulo_table_worker]},
+		%%-------------------------------------------------------------
+		%% not supported yet accumulo namespace functionality until v1.6.1
+		%%-------------------------------------------------------------
+		% {accumulo_namespace_worker,
+		% 	{accumulo_namespace_worker,start_link,[ProxyServers]},
+		% 	permanent, 5000,worker,
+		% 	[accumulo_namespace_worker]},
+		%%-------------------------------------------------------------
+		{accumulo_security_worker,
+			{accumulo_security_worker,start_link,[ProxyServers]},
+			permanent, 5000,worker,
+			[accumulo_security_worker]},
+		{accumulo_instance_worker,
+			{accumulo_instance_worker,start_link,[ProxyServers]},
+			permanent, 5000,worker,
+			[accumulo_instance_worker]}
+	],
+	ets:new(erlaccumulo,[set,named_table,public]),
+    {ok, {{one_for_one, MaxRestart, MaxTime}, ChildWorkerSpecs}}.

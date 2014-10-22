@@ -20,14 +20,6 @@ Compatibility :
 dependencies :
 
 	thrift : thrift erlang binding from thrift original source
-	poolboy : erlang worker pool factory
 
-References :
-
-poolboy examples :
-
-	poolboy/example : basic example from poolboy
-	epgpb 
-	eredis__pool
-	sharded__eredis
-
+references :
+	pool : http://learnyousomeerlang.com/building-applications-with-otp

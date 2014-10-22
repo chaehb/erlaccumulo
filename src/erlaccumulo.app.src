@@ -8,21 +8,8 @@
   {applications, [
                   kernel,
                   stdlib,
-				  poolboy,
 				  thrift
                  ]},
   {mod, { erlaccumulo_app, []}},
-  {env, [
-  	{pools,[
-		{pool_0,[
-	  		{size,10},
-			{max_overflow,20}
-		],[
-  			{host,"114.207.112.33"},
-			{port,42424},
-			{user,"root"},
-			{password,"tjrdidantk"}
-		]}
-  ]}
- ]}
+  {env, []}
 ]}.
