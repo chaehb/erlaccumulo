@@ -20,6 +20,3 @@ Compatibility :
 dependencies :
 
 	thrift : thrift erlang binding from thrift original source
-
-references :
-	pool : http://learnyousomeerlang.com/building-applications-with-otp
